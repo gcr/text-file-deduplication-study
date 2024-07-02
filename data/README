@@ -1,0 +1,5 @@
+Download this dataset from
+https://www.kaggle.com/datasets/starblasters8/human-vs-llm-text-corpus
+
+$ sha256sum data.csv
+9a957196ee1dd1f67ab4b2fa55a48be2c7218683e6dfa1fb51145f68a521d8d5  data.csv
