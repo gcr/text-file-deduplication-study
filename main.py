@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
-from data import all_sentences
+from data import ensure_preprocessed_sentences
 from tqdm.auto import tqdm
 import torch
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 print("starting load...")
-_SENTENCES = all_sentences(ndocs=25000)
+_SENTENCES = ensure_preprocessed_sentences() #nrows=250_000)
 print(_SENTENCES)
 
 # https://github.com/Ankur3107/transformers-on-macbook-m1-gpu

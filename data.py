@@ -1,5 +1,5 @@
 import pandas as pd
-import dataclasses
+import os
 from tqdm.auto import tqdm
 from spacy.lang.en import English
 
@@ -8,15 +8,19 @@ sentencizer = English()
 sentencizer.add_pipe('sentencizer')
 
 def load_sentences(path="data/data.csv", ndocs=None):
+    """Returns a DataFrame of sentences."""
     csv = pd.read_csv(path, nrows=ndocs, usecols=['text'])
     return pd.DataFrame([(doc_id, sent_id, sent.text.strip())
         for doc_id, doc in enumerate(tqdm(csv.text.tolist(), desc="sentencizer"))
         for sent_id, sent in enumerate(sentencizer(doc).sents)
     ], columns=('doc_id','sent_id','text')).set_index(['doc_id','sent_id'])
 
+def ensure_preprocessed_sentences(out_path="data/sentences-preprocessed.csv.zstd", nrows=None):
+    if not os.path.exists(out_path):
+        print("Preprocessing sentences...")
+        df = load_sentences().to_csv(out_path)
+    return pd.read_csv(out_path, nrows=nrows)
+
 
 if __name__ == "__main__":
-    print("Saving sentences to CSV:")
-    df = load_sentences()
-    print(df)
-    df.to_csv("data/sentences.csv.xz")
+    ensure_preprocessed_sentences()
