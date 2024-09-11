@@ -7,9 +7,16 @@ from spacy.lang.en import English
 sentencizer = English()
 sentencizer.add_pipe('sentencizer')
 
+def load_docs(path="data/data.parquet"):
+    #if not os.path.exists(out_path):
+    #    print("Preprocessing docs ...")
+    #    pd.read_csv(path, usecols=['text']).to_parquet(out_path)
+    return pd.read_parquet(path)
+
+
 def load_sentences(path="data/data.csv", ndocs=None):
     """Returns a DataFrame of sentences."""
-    csv = pd.read_csv(path, nrows=ndocs, usecols=['text'])
+    csv = load_docs(path=path, ndocs=ndocs)
     return pd.DataFrame([(doc_id, sent_id, sent.text.strip())
         for doc_id, doc in enumerate(tqdm(csv.text.tolist(), desc="sentencizer"))
         for sent_id, sent in enumerate(sentencizer(doc).sents)
